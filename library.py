@@ -1,6 +1,7 @@
 from statsmodels.tsa.stattools import acf, pacf
 from statsmodels.graphics.tsaplots import plot_acf
 from statsmodels.tsa.ar_model import AutoReg
+from statsmodels.tsa.arima.model import ARIMA
 import pandas as pd
 import scipy.stats
 import matplotlib.pyplot as plt
@@ -43,6 +44,13 @@ def fit_ar_one_model(data):
     """
     ar_model = AutoReg(endog=data, lags=[1], old_names=True).fit()
     return ar_model
+
+def fit_arma_model(data, p, q):
+    """
+    Fit an ARMA(p,q) model to some data
+    """
+    arma_model = ARIMA(endog=data, order=(p,0,q)).fit()
+    return arma_model
 
 
 def plot_prediction(df, column, ar_model):
