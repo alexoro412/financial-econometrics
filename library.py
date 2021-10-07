@@ -1,4 +1,4 @@
-from statsmodels.tsa.stattools import acf
+from statsmodels.tsa.stattools import acf, pacf
 from statsmodels.graphics.tsaplots import plot_acf
 from statsmodels.tsa.ar_model import AutoReg
 import pandas as pd
@@ -23,9 +23,13 @@ def show_acf(data, nlags=48, title=""):
     Plot the autocorrelation function, and also print out a table
     """
     ac, qstats, pvalues = acf(data, nlags=nlags, fft=False, qstat=True)
+    # TODO verify which pacf method is best
+    pac = pacf(data, nlags=nlags)
+    # Drop the autocorrelations with lag 0
+    pac = pac[1:]
     ac = ac[1:]
     print("Autocorrelation Function")
-    print(pd.DataFrame({"acf": ac, "Q": qstats, "p": pvalues}))
+    print(pd.DataFrame({"acf": ac, "pacf": pac, "Q": qstats, "p": pvalues}))
     plot_acf(data, zero=False, title=title,
              lags=nlags)
     plt.ylabel("ACF")
